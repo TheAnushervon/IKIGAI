@@ -25,16 +25,17 @@ services:
     # a password of your choosing to it before running `docker compose up`.
 
   db:
-    image: postgres
+    image: postgres:16.3
     restart: always
     user: postgres
+    container_name: db
     secrets:
       - db-password
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=example
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+        POSTGRES_DB: postgres
+        POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     expose:
       - 5432
     healthcheck:
@@ -46,4 +47,4 @@ volumes:
   db-data:
 secrets:
   db-password:
-    file: db/password.txt
+    file: db/password
