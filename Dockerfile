@@ -42,10 +42,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 # Copy the source code into the container.
-COPY app .
+COPY . .
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
 # Run the application.
-CMD python manage.py runserver 0.0.0.0:8000
+CMD python "./app/manage.py" runserver 0.0.0.0:8000
