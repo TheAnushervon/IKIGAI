@@ -11,5 +11,5 @@ class UserSerializer(serializers.ModelSerializer):
 class InputSerializer(serializers.Serializer):
     INN = serializers.CharField()
     UKEP = serializers.CharField()
-    MCHD = serializers.FileField
+    MCHD = serializers.CharField()
     email = serializers.EmailField()

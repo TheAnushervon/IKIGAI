@@ -45,7 +45,7 @@ class InputViewSet(viewsets.ViewSet):
                 else:
                     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({'message': 'Inputs do not match'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Not found in FNS API'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -80,6 +80,6 @@ class UserViewSet(viewsets.ModelViewSet):
 #         else:
 #             return None
 
-
-def main(request):
-    return render(request, 'main.html')
+#
+# def main(request):
+#     return render(request, 'main.html')
