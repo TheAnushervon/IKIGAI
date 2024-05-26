@@ -12,11 +12,26 @@ class InputViewSet(viewsets.ViewSet):
         serializer = InputSerializer(data=request.data)
         if serializer.is_valid():
             INN = serializer.validated_data['INN']
-            UKEP = serializer.validated_data['УКЭП']
+            UKEP = serializer.validated_data['UKEP']
             MCHD = serializer.validated_data['MCHD']
             email = serializer.validated_data['email']
 
-            if first_input == second_input:
+            # Validating INN by api-fns
+
+            url = 'https://api-fns.ru/api/egr'
+            params = {
+                'req': INN,
+                'key': '90bc98530dabe4d2d36c8082223e8efc56382a1f'
+            }
+
+            response = requests.get(url, params=params)
+
+            value = ""
+            if response.status_code == 200:
+                data = response.json()
+                value = data["items"][0]["ЮЛ"]["Руководитель"]
+
+            if value != "":
                 user_data = {'email': email, 'verified': True}
                 user_serializer = UserSerializer(data=user_data)
                 if user_serializer.is_valid():
@@ -46,24 +61,24 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 # Create your views here.
-def get_company(request):
-    if request.method == 'POST':
-        INN = request.POST.get('INN')
-        url = 'https://api-fns.ru/api/egr'
-        params = {
-            'req': INN,
-            'key': '90bc98530dabe4d2d36c8082223e8efc56382a1f'
-        }
-
-        response = requests.get(url, params=params)
-
-        data = response.json()
-        if response.status_code == 200:
-            data = response.json()
-            value = data["items"][0]["ЮЛ"]["Руководитель"]
-            return value
-        else:
-            return None
+# def get_company(request):
+#     if request.method == 'POST':
+#         INN = request.POST.get('INN')
+#         url = 'https://api-fns.ru/api/egr'
+#         params = {
+#             'req': INN,
+#             'key': '90bc98530dabe4d2d36c8082223e8efc56382a1f'
+#         }
+#
+#         response = requests.get(url, params=params)
+#
+#         data = response.json()
+#         if response.status_code == 200:
+#             data = response.json()
+#             value = data["items"][0]["ЮЛ"]["Руководитель"]
+#             return value
+#         else:
+#             return None
 
 
 def main(request):
