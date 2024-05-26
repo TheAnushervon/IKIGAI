@@ -7,7 +7,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = Users
         fields = ('email', 'verified')
 
+
 class InputSerializer(serializers.Serializer):
-    first_input = serializers.CharField()
-    second_input = serializers.CharField()
+    INN = serializers.CharField()
+    UKEP = serializers.CharField()
+    MCHD = serializers.FileField
     email = serializers.EmailField()
