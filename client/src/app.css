@@ -1,0 +1,17 @@
+:root {
+	font-size: 16px;
+}
+
+body {
+	background-color: var(--color-background-primary);
+	font-family: system-ui, Roboto, Ubuntu, sans-serif;
+	color: var(--color-text-primary);
+}
+
+h1 {
+	font-size: 3rem;
+}
+
+h2 {
+	font-size: 2rem;
+}
