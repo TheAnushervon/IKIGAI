@@ -1,15 +1,16 @@
 from django.shortcuts import render
 import requests
-import json 
+import json
+
 
 # Create your views here.
-def get_company(request): 
-    if request.method == 'POST': 
-        INN = request.POST.get('INN')   
+def get_company(request):
+    if request.method == 'POST':
+        INN = request.POST.get('INN')
         url = 'https://api-fns.ru/api/egr'
         params = {
             'req': INN,
-            'key': '90bc98530dabe4d2d36c8082223e8efc56382a1f' 
+            'key': '90bc98530dabe4d2d36c8082223e8efc56382a1f'
         }
 
         response = requests.get(url, params=params)
@@ -21,3 +22,7 @@ def get_company(request):
             return value
         else:
             return None
+
+
+def main(request):
+    return render(request, 'main.html')
