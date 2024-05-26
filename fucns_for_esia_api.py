@@ -1,7 +1,7 @@
 """
---------------------------
-CODE WAS NOT TESTED  DUE TO NO ACCESS TO ESIA PORTAL
---------------------------
+--------------------------------------------------------------------------------------------------------
+                CODE WAS NOT TESTED  DUE TO UNAVAILABILITY TO  ACCESS ESIA PORTAL
+--------------------------------------------------------------------------------------------------------
 """
 
 import base64
@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 import gostcrypto
 
 load_dotenv()
+
+using_pycades = os.getenv("using_pycades", False)
 
 accessTkn_esia = ""
 api_key = os.getenv('apikey', 'my api key')
@@ -23,7 +25,12 @@ def get_access_token(api_key_input=None):
     global accessTkn_esia, api_key, esia_host
     try:
         api_key_data = api_key_input if api_key_input else api_key
-        signature = sign_key(api_key_data)
+
+        if using_pycades:
+            signature = sign_key_pycades(api_key_data)
+        else:
+            signature = sign_key(api_key_data)
+
         url = f"{esia_host}/esia-rs/api/public/v1/orgs/ext-app/{api_key}/tkn?signature={signature}"
         response = requests.get(url).json()
         if "accessTkn" in response:
@@ -47,6 +54,37 @@ def sign_key(api_key):
                                                      'id-tc26-gost-3410-2012-256-paramSetB']).sign(
             private_key_bytes, digest)
     return base64.urlsafe_b64encode(signature).decode('utf-8')
+
+
+def sign_key_pycades(api_key):
+    # Function using pycades (if installed + license key) -> generally more robust and reliable solution
+
+    import sys
+    sys.path.append(r'/usr/local/lib/pycades.so')
+    import pycades
+
+    TSAAddress = os.getenv('TSAAddress', 'http://testca2012.cryptopro.ru/tsp/tsp.srf')
+    store = pycades.Store()
+    store.Open(pycades.CADESCOM_CONTAINER_STORE, pycades.CAPICOM_MY_STORE, pycades.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED)
+    certs = store.Certificates
+    assert (certs.Count != 0), "Certificates with private key not found"
+    signer = pycades.Signer()
+    signer.Certificate = certs.Item(1)
+    signer.CheckCertificate = True
+    signer.TSAAddress = TSAAddress
+    signedData = pycades.SignedData()
+    signedData.ContentEncoding = pycades.CADESCOM_BASE64_TO_BINARY
+    message = api_key
+    message_bytes = message.encode("utf-8")
+    base64_message = base64.b64encode(message_bytes)
+    signedData.Content = base64_message.decode("utf-8")
+    bDetached = int(1)
+    signature = signedData.SignCades(signer, pycades.CADESCOM_CADES_BES, bDetached)
+    signature = signature.replace("\r\n", "", )
+    signature = signature + "=" * (4 - len(signature) % 4)
+    message_bytes = base64.b64decode(signature)
+    result = (base64.urlsafe_b64encode(message_bytes)).decode("utf-8")
+    return result
 
 
 def make_request(endpoint, data):
