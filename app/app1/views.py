@@ -1,6 +1,48 @@
 from django.shortcuts import render
 import requests
 import json
+from rest_framework import generics, viewsets, status
+from rest_framework.response import Response
+from .models import Users
+from .serializers import UserSerializer, InputSerializer
+
+
+class InputViewSet(viewsets.ViewSet):
+    def create(self, request):
+        serializer = InputSerializer(data=request.data)
+        if serializer.is_valid():
+            INN = serializer.validated_data['INN']
+            UKEP = serializer.validated_data['УКЭП']
+            MCHD = serializer.validated_data['MCHD']
+            email = serializer.validated_data['email']
+
+            if first_input == second_input:
+                user_data = {'email': email, 'verified': True}
+                user_serializer = UserSerializer(data=user_data)
+                if user_serializer.is_valid():
+                    response = requests.post('http://localhost:8000/api/users/', data=user_serializer.data)
+
+                    if response.status_code == 200:
+                        return Response({'message': 'Data sent successfully'}, status=status.HTTP_201_CREATED)
+                    else:
+                        return Response({'message': 'Failed to send data'},
+                                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                else:
+                    return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'message': 'Inputs do not match'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = Users.objects.all()
+    serializer_class = UserSerializer
+
+
+# class UserList(generics.ListAPIView):
+#     queryset = Users.objects.all()
+#     serializer_class = UserSerializer
 
 
 # Create your views here.
