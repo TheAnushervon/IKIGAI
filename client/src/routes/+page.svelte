@@ -6,21 +6,23 @@
 	let MCHD: string = 'test';
 	let email: string = 'test@mail.ru';
 
+	$: message = '';
+
 	const handleSubmit = async () => {
-		const response = await fetch('/api/input', {
+		message = '';
+		const response = await fetch('http://0.0.0.0:8000/api/input/', {
 			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
 			body: JSON.stringify({ INN, UKEP, MCHD, email })
 		});
 
-		if (!response.ok) {
-			console.error('Response is not ok');
-		}
-
-		const result = response.json().catch((cause: unknown) => {
+		const result = (await response.json().catch((cause: unknown) => {
 			console.error(new Error('Result json parse failed', { cause }));
-		});
+		})) as Record<string, string>;
 
-		console.log(result, 'result');
+		message = result.message;
 	};
 </script>
 
@@ -41,8 +43,11 @@
 		Электронная почта
 		<input type="email" name="email" id="email" bind:value={email} />
 	</label>
-
 	<Button />
+
+	<p>
+		{message}
+	</p>
 </form>
 
 <style>
