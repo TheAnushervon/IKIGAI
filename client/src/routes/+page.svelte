@@ -1,15 +1,22 @@
 <script lang="ts">
 	import Button from '$lib/components/button.svelte';
 
+	interface ApiResponse {
+		email?: string[];
+		message?: string;
+	}
+
 	let INN: string = '6208005457';
 	let UKEP: string = 'test';
 	let MCHD: string = 'test';
 	let email: string = 'test@mail.ru';
 
-	$: message = '';
+	$: errorMessage = '';
+	$: emailErrorMessage = '';
 
 	const handleSubmit = async () => {
-		message = '';
+		errorMessage = '';
+		emailErrorMessage = '';
 		const response = await fetch('http://0.0.0.0:8000/api/input/', {
 			method: 'POST',
 			headers: {
@@ -20,9 +27,10 @@
 
 		const result = (await response.json().catch((cause: unknown) => {
 			console.error(new Error('Result json parse failed', { cause }));
-		})) as Record<string, string>;
+		})) as ApiResponse;
 
-		message = result.message;
+		errorMessage = result.message ?? 'Произошла ошибка';
+		emailErrorMessage = result.email?.join(', ') ?? '';
 	};
 </script>
 
@@ -46,7 +54,10 @@
 	<Button />
 
 	<p>
-		{message}
+		{errorMessage}
+	</p>
+	<p>
+		{emailErrorMessage}
 	</p>
 </form>
 

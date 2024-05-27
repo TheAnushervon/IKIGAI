@@ -13,6 +13,13 @@ services:
         condition: service_healthy
     networks:
       - postgres
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1,server,0.0.0.0
+      - DB_NAME=db
+      - DB_USER=postgres_user
+      - DB_PASSWORD=postgres_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
 
   postgres:
     container_name: postgres_container

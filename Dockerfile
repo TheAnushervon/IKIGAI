@@ -23,15 +23,15 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
+COPY requirements.txt /app/
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
 # Switch to the non-privileged user to run the application.
 USER appuser
 
-COPY . .
+COPY . /app/
 
 EXPOSE 8000
 
-CMD python "./app/manage.py" runserver 0.0.0.0:8000
+CMD ["sh", "-c", "cd app && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
