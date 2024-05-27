@@ -56,9 +56,9 @@ class InputViewSet(viewsets.ViewSet):
                 "MCHD": MCHD,
             }
 
-            order(order_data)
+            response = order(order_data)
 
-            if value != "" and order != "":
+            if value != "" and response.status is True:
                 user_data = {'email': email, 'verified': True}
                 user_serializer = UserSerializer(data=user_data)
                 if user_serializer.is_valid():
