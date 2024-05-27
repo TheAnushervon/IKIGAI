@@ -77,12 +77,33 @@ docker-compose up --build
 docker-compose build --platform=linux/amd64 -t .
 ```
 
+### Environment Files
+
+В корневой директории нужно создать файл `.env` и изменить соответствующие поля (изначально они тестовые):
+```
+DB_NAME=postgres
+DB_USER=postgres_user
+DB_PASSWORD=postgres_password
+DB_HOST=postgres_container
+DB_PORT=5432
+
+using_pycades=False
+apikey='my api key'
+esia_host='https://esia-portal1.test.gosuslugi.ru'
+svcdev_host='https://svcdev-beta.test.gosuslugi.ru'
+private_key_path='./esia/esia/GOST 2012 PROD.cer'
+
+TSAAddress='http://testca2012.cryptopro.ru/tsp/tsp.srf'
+```
+
 ### Endpoints
 
 Данные с фронтенда отправляются по адресу `http://localhost:8000/api/input/`. 
-В виде полей: { "INN": "INN", "UKEP": "UKEP", "MCHD": "file from media folder", "email": "email@email.email" }.
+В виде полей: { "INN": "INN", "UKEP": "UKEP", "MCHD": file from media folder, "email": "email@email.email" }.
 В MCHD загрузка с папки media (внутреннее файловое хранилище).
 
-Верифицированные пользователи будут доступны по `http://localhost:8000/api/users/`.
+Пользователи будут доступны по `http://localhost:8000/api/users/`.
 Формат в виде JSON:
-{ "email": "email@email.email", "verified": True/False }
+{ "email": "email@email.email", "verified": true/false }.
+
+Те кто прошли полную верификацию будут обозначены `"verified": true`.
