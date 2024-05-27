@@ -10,19 +10,18 @@ from .models import Users
 from .serializers import UserSerializer, InputSerializer
 from dotenv import load_dotenv
 import sys
-import pycades
 
 sys.path.append(r'/usr/local/lib/pycades.so')
 
 load_dotenv()
 
-using_pycades = os.getenv("using_pycades", False)
+using_pycades = os.getenv("using_pycades")
 
 accessTkn_esia = ""
-api_key = os.getenv('apikey', 'my api key')
-esia_host = os.getenv('esia_host', 'https://esia-portal1.test.gosuslugi.ru')
-svcdev_host = os.getenv('svcdev_host', 'https://svcdev-beta.test.gosuslugi.ru')
-private_key_path = os.getenv('private_key_path', './esia/esia/GOST 2012 PROD.cer')
+api_key = os.getenv('apikey')
+esia_host = os.getenv('esia_host')
+svcdev_host = os.getenv('svcdev_host')
+private_key_path = os.getenv('private_key_path')
 
 
 class InputViewSet(viewsets.ViewSet):
@@ -119,9 +118,10 @@ def sign_key(api_key):
 
 
 def sign_key_pycades(api_key):
+    import pycades
     # Function using pycades (if installed + license key) -> generally more robust and reliable solution
 
-    TSAAddress = os.getenv('TSAAddress', 'http://testca2012.cryptopro.ru/tsp/tsp.srf')
+    TSAAddress = os.getenv('TSAAddress')
     store = pycades.Store()
     store.Open(pycades.CADESCOM_CONTAINER_STORE, pycades.CAPICOM_MY_STORE, pycades.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED)
     certs = store.Certificates

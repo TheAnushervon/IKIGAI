@@ -78,3 +78,11 @@ docker-compose build --platform=linux/amd64 -t .
 ```
 
 ### Endpoints
+
+Данные с фронтенда отправляются по адресу `http://localhost:8000/api/input/`. 
+В виде полей: { "INN": "INN", "UKEP": "UKEP", "MCHD": "file from media folder", "email": "email@email.email" }.
+В MCHD загрузка с папки media (внутреннее файловое хранилище).
+
+Верифицированные пользователи будут доступны по `http://localhost:8000/api/users/`.
+Формат в виде JSON:
+{ "email": "email@email.email", "verified": True/False }

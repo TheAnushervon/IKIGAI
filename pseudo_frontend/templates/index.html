@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FastAPI Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Submit Data</h1>
+        <form action="/submit" method="post" enctype="multipart/form-data" class="mt-3">
+            <div class="form-group">
+                <label for="inn">INN:</label>
+                <input type="number" class="form-control" id="inn" name="inn" required>
+            </div>
+            <div class="form-group">
+                <label for="ukep">UKEP:</label>
+                <input type="file" class="form-control-file" id="ukep" name="ukep" accept=".cer" required>
+            </div>
+            <div class="form-group">
+                <label for="mchd">MCHD:</label>
+                <input type="text" class="form-control" id="mchd" name="mchd" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="confirmed" name="confirmed" value="true">
+                <label class="form-check-label" for="confirmed">Confirmed</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
