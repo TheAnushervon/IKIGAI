@@ -10,6 +10,14 @@ services:
       postgres:
         condition: service_healthy
 
+  fastapi:
+    build:
+      context: .
+      dockerfile: pseudo_frontend/Dockerfile_fastapi
+    container_name: fastapi_frontend_container
+    ports:
+      - "8100:8100"
+
   postgres:
     container_name: postgres_container
     image: postgres:16.3-alpine3.18
