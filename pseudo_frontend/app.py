@@ -43,20 +43,12 @@ async def submit_form(request: Request,
         "e-mail": email
     }
 
-    users_payload = {
-        "email address": email,
-        "confirmed": confirmed
-    }
-
     async with aiohttp.ClientSession() as session:
         async with session.post('http://localhost:8000/api/input/', json={"_BOS_": bos_payload}) as response1:
             response1_data = await response1.json()
-        async with session.post('http://localhost:8000/api/users/', json=users_payload) as response2:
-            response2_data = await response2.json()
 
     os.remove(ukep_path)
 
     return {
-        "endpoint1_response": response1_data,
-        "endpoint2_response": response2_data
+        "endpoint1_response": response1_data
     }
