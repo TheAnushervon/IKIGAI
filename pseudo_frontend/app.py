@@ -3,6 +3,7 @@ from fastapi import Request
 from fastapi import Form
 from fastapi import UploadFile
 from fastapi import File
+from typing import Optional
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import aiohttp
@@ -22,7 +23,7 @@ async def read_root(request: Request):
 async def submit_form(request: Request,
                       inn: int = Form(...),
                       ukep: UploadFile = File(...),
-                      mchd: UploadFile = File(...),
+                      mchd: Optional[UploadFile] = File(None),
                       email: str = Form(...),
                       confirmed: bool = Form(...)):
     # Save the uploaded file to a temporary directory
@@ -31,10 +32,11 @@ async def submit_form(request: Request,
     with open(ukep_path, "wb") as buffer:
         shutil.copyfileobj(ukep.file, buffer)
 
-    mchd_path = f"temp/{mchd.filename}"
-    os.makedirs(os.path.dirname(mchd_path), exist_ok=True)
-    with open(mchd_path, "wb") as buffer:
-        shutil.copyfileobj(mchd.file, buffer)
+    if mchd:
+        mchd_path = f"temp/{mchd.filename}"
+        os.makedirs(os.path.dirname(mchd_path), exist_ok=True)
+        with open(mchd_path, "wb") as buffer:
+            shutil.copyfileobj(mchd.file, buffer)
 
     bos_payload = {
         "INN": inn,
