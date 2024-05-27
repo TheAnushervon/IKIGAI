@@ -65,10 +65,6 @@
 
 - Не протестированы запросы к API Госуслуг (т.к нет доступа)
 - Не протестирована работы с реальными ЭЦП
-- Не доработанный фронтенд (отвественный за фронтенд не успел выложить рабочую версию)
-  - Обернули обработку эндпоинтов на FastAPI (простой интнерфейс)
-
-
 
 # Как использовать наш проект
 
@@ -85,6 +81,7 @@ docker-compose build --platform=linux/amd64 -t .
 ### Environment Files
 
 В корневой директории нужно создать файл `.env` и изменить соответствующие поля (изначально они тестовые):
+
 ```
 DB_NAME=postgres
 DB_USER=postgres_user
@@ -103,7 +100,7 @@ TSAAddress='http://testca2012.cryptopro.ru/tsp/tsp.srf'
 
 ### Endpoints
 
-Данные с фронтенда отправляются по адресу `http://localhost:8000/api/input/`. 
+Данные с фронтенда отправляются по адресу `http://localhost:8000/api/input/`.
 В виде полей: { "INN": "INN", "UKEP": "UKEP", "MCHD": file from media folder, "email": "email@email.email" }.
 В MCHD загрузка с папки media (внутреннее файловое хранилище).
 
@@ -112,3 +109,6 @@ TSAAddress='http://testca2012.cryptopro.ru/tsp/tsp.srf'
 { "email": "email@email.email", "verified": true/false }.
 
 Те кто прошли полную верификацию будут обозначены `"verified": true`.
+
+- Альтернативная обработка ендпоинтов через FastAPI на порте 8100 (веб интерфейс)
+  ![demo_login_fasapi.jpg](resources%2Fdemo_login_fasapi.jpg)
